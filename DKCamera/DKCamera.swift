@@ -60,7 +60,7 @@ open class DKCamera: UIViewController, AVCaptureVideoDataOutputSampleBufferDeleg
                 })
             }) : handler(false))
     }
-    
+    open var frameOutput: ((_ image: UIImage) -> Void)?
     open var didCancel: (() -> Void)?
     open var didFinishCapturingImage: ((_ image: UIImage) -> Void)?
     
@@ -644,8 +644,7 @@ open class DKCamera: UIViewController, AVCaptureVideoDataOutputSampleBufferDeleg
     open func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
         guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
         DispatchQueue.main.async { [unowned self] in
-            print("Got a frame!")
-            self.delegate?.captured(image: uiImage)
+            self.frameOutput(uiImage)
         }
     }
 }
